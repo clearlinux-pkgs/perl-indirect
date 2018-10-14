@@ -4,21 +4,31 @@
 #
 Name     : perl-indirect
 Version  : 0.38
-Release  : 1
+Release  : 2
 URL      : https://cpan.metacpan.org/authors/id/V/VP/VPIT/indirect-0.38.tar.gz
 Source0  : https://cpan.metacpan.org/authors/id/V/VP/VPIT/indirect-0.38.tar.gz
 Source1  : http://http.debian.net/debian/pool/main/libi/libindirect-perl/libindirect-perl_0.38-1.debian.tar.xz
 Summary  : 'Lexically warn about using the indirect method call syntax.'
 Group    : Development/Tools
 License  : Artistic-1.0-Perl
-Requires: perl-indirect-lib
-Requires: perl-indirect-man
+Requires: perl-indirect-lib = %{version}-%{release}
+BuildRequires : buildreq-cpan
 
 %description
 NAME
 indirect - Lexically warn about using the indirect method call syntax.
 VERSION
 Version 0.38
+
+%package dev
+Summary: dev components for the perl-indirect package.
+Group: Development
+Requires: perl-indirect-lib = %{version}-%{release}
+Provides: perl-indirect-devel = %{version}-%{release}
+
+%description dev
+dev components for the perl-indirect package.
+
 
 %package lib
 Summary: lib components for the perl-indirect package.
@@ -28,19 +38,11 @@ Group: Libraries
 lib components for the perl-indirect package.
 
 
-%package man
-Summary: man components for the perl-indirect package.
-Group: Default
-
-%description man
-man components for the perl-indirect package.
-
-
 %prep
-tar -xf %{SOURCE1}
-cd ..
 %setup -q -n indirect-0.38
-mkdir -p %{_topdir}/BUILD/indirect-0.38/deblicense/
+cd ..
+%setup -q -T -D -n indirect-0.38 -b 1
+mkdir -p deblicense/
 mv %{_topdir}/BUILD/debian/* %{_topdir}/BUILD/indirect-0.38/deblicense/
 
 %build
@@ -66,9 +68,9 @@ make TEST_VERBOSE=1 test
 %install
 rm -rf %{buildroot}
 if test -f Makefile.PL; then
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install PERL_INSTALL_ROOT=%{buildroot} INSTALLDIRS=vendor
 else
-./Build install --installdirs=site --destdir=%{buildroot}
+./Build install --installdirs=vendor --destdir=%{buildroot}
 fi
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
@@ -77,12 +79,12 @@ find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
 
 %files
 %defattr(-,root,root,-)
-/usr/lib/perl5/site_perl/5.26.1/x86_64-linux-thread-multi/indirect.pm
+/usr/lib/perl5/vendor_perl/5.26.1/x86_64-linux-thread-multi/indirect.pm
+
+%files dev
+%defattr(-,root,root,-)
+/usr/share/man/man3/indirect.3
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib/perl5/site_perl/5.26.1/x86_64-linux-thread-multi/auto/indirect/indirect.so
-
-%files man
-%defattr(-,root,root,-)
-/usr/share/man/man3/indirect.3
+/usr/lib/perl5/vendor_perl/5.26.1/x86_64-linux-thread-multi/auto/indirect/indirect.so
