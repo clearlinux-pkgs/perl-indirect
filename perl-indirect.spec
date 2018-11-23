@@ -4,7 +4,7 @@
 #
 Name     : perl-indirect
 Version  : 0.38
-Release  : 3
+Release  : 4
 URL      : https://cpan.metacpan.org/authors/id/V/VP/VPIT/indirect-0.38.tar.gz
 Source0  : https://cpan.metacpan.org/authors/id/V/VP/VPIT/indirect-0.38.tar.gz
 Source1  : http://http.debian.net/debian/pool/main/libi/libindirect-perl/libindirect-perl_0.38-1.debian.tar.xz
